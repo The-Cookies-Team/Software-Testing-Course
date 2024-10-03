@@ -15,12 +15,15 @@ namespace Buoi07_TinhToan3
         public Form1()
         {
             InitializeComponent();
+            txtSo2.Enter += txtSo2_Enter;
+            txtSo1.Enter += txtSo1_Enter;
+            this.MaximizeBox = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             txtSo1.Text = txtSo2.Text = "0";
-            radCong.Checked = true;             //đầu tiên chọn phép cộng
+            radCong.Checked = true;             // Đầu tiên chọn phép cộng
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -34,17 +37,64 @@ namespace Buoi07_TinhToan3
 
         private void btnTinh_Click(object sender, EventArgs e)
         {
-            //lấy giá trị của 2 ô số
             double so1, so2, kq = 0;
-            so1 = double.Parse(txtSo1.Text);
-            so2 = double.Parse(txtSo2.Text);
-            //Thực hiện phép tính dựa vào phép toán được chọn
+
+            // Kiểm tra ô nhập thứ nhất
+            if (string.IsNullOrWhiteSpace(txtSo1.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị cho ô thứ nhất", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Kiểm tra ô nhập thứ hai
+            if (string.IsNullOrWhiteSpace(txtSo2.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị cho ô thứ hai", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Kiểm tra xem giá trị nhập có phải là số hợp lệ không
+            if (!double.TryParse(txtSo1.Text, out so1))
+            {
+                MessageBox.Show("Giá trị ô thứ nhất không hợp lệ", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!double.TryParse(txtSo2.Text, out so2))
+            {
+                MessageBox.Show("Giá trị ô thứ hai không hợp lệ", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Thực hiện phép tính dựa vào phép toán được chọn
             if (radCong.Checked) kq = so1 + so2;
             else if (radTru.Checked) kq = so1 - so2;
             else if (radNhan.Checked) kq = so1 * so2;
-            else if (radChia.Checked && so2 != 0) kq = so1 / so2;
-            //Hiển thị kết quả lên trên ô kết quả
+            else if (radChia.Checked)
+            {
+                if (so2 != 0)
+                {
+                    kq = so1 / so2;
+                }
+                else
+                {
+                    MessageBox.Show("Không thể chia cho 0", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            
             txtKq.Text = kq.ToString();
+        }
+
+        private void txtSo2_Enter(object sender, EventArgs e)
+        {
+            txtSo2.SelectAll();
+        }
+
+        private void txtSo1_Enter(object sender, EventArgs e)
+        {
+            txtSo1.SelectAll();
         }
     }
 }
