@@ -1,2 +1,1 @@
-# Software-Testing-Course
- 
+Software Testing Excercies
